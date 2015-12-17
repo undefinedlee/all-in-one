@@ -12,5 +12,7 @@ var allInOne = require("all-in-one");
 allInOne({
     "name": "XXX",
     "main": "index.js"
-})
+}, function(code){
+    console.log(code);
+});
 ```
