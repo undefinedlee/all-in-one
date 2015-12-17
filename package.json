@@ -1,0 +1,25 @@
+{
+  "name": "all-in-one",
+  "version": "1.0.0",
+  "description": "package commonjs file all in one",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/undefinedlee/all-in-one.git"
+  },
+  "keywords": [
+    "all-in-one"
+  ],
+  "author": "undefinedlee.lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/undefinedlee/all-in-one/issues"
+  },
+  "homepage": "https://github.com/undefinedlee/all-in-one#readme",
+  "dependencies": {
+    "uglify-js": "^2.6.1"
+  }
+}
