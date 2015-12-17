@@ -15,7 +15,8 @@ var modTemplate = fs.readFileSync(path.join(__dirname, "mod-template.js"), "utf8
 	}
  */
 module.exports = function(config, callback){
-	var mainfile = path.join(fs.realpathSync("."), config.main);
+	var rootDir = fs.realpathSync(".");
+	var mainfile = path.join(rootDir, config.main);
 	var index = 0;
 	var waitCount = 0;
 	var codeList = [];
@@ -51,13 +52,13 @@ module.exports = function(config, callback){
 				callback(template.replace(/\{\{(body|globalName)\}\}/g, function(all, key){
 					return {
 						body: codeList.map(function(code, index){
-							return modTemplate.replace(/\{\{(body|modId)\}\}/g, function(all, key){
+							return "\n// " + filepath.replace(rootDir, "") + "\n" + modTemplate.replace(/\{\{(body|modId)\}\}/g, function(all, key){
 								return {
 									modId: code.id,
 									body: code.content
 								}[key];
 							});
-						}).join(""),
+						}).join("\n"),
 						globalName: config.name
 					}[key];
 				}));
