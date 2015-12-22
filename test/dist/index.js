@@ -16,16 +16,18 @@
 		module.exports = "b";
 	});
 
-	// c
-	define("2", function(require, exports, module){
-		module.exports = "c";
-	});
-
 	// a
 	define("1", function(require, exports, module){
 		var b = require("3");
 		
 		module.exports = "a";
+	});
+
+	// c
+	define("2", function(require, exports, module){
+		var a = require("1");
+		
+		module.exports = "c";
 	});
 
 	// index.js
