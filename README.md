@@ -10,9 +10,14 @@ npm install all-in-one
 var allInOne = require("all-in-one");
 
 allInOne({
+    // 打包完之后释放到全局下的变量名[可选]
     "name": "XXX",
-    "main": "index.js"
-}, function(code){
+    // 入口文件
+    "main": "src/index.js",
+    // 打包后的文件[可选]
+    "dist": "dist/index.js"
+}, function(code){ // 打包完之后的回调函数[可选]
+    // 打包后的源代码
     console.log(code);
 });
 ```
