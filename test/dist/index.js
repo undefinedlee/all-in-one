@@ -11,29 +11,29 @@
 		mods[id] = module.exports;
 	}
 	
-	// index.js
-	define("0", function(require, exports, module){
-		var a = require("1");
-		var c = require("2");
-		
-		module.exports = "index";
+	// b.js
+	define("3", function(require, exports, module){
+		module.exports = "b";
 	});
 
-	// a.js
+	// c
+	define("2", function(require, exports, module){
+		module.exports = "c";
+	});
+
+	// a
 	define("1", function(require, exports, module){
 		var b = require("3");
 		
 		module.exports = "a";
 	});
 
-	// c.js
-	define("2", function(require, exports, module){
-		module.exports = "c";
-	});
-
-	// b.js
-	define("3", function(require, exports, module){
-		module.exports = "b";
+	// index.js
+	define("0", function(require, exports, module){
+		var a = require("1");
+		var c = require("2");
+		
+		module.exports = "index";
 	});
 
 	return require("0");

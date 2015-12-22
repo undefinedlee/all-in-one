@@ -42,7 +42,9 @@ module.exports = function(config, callback){
 		var index = codeList.push(null) - 1;
 		var modId = codeHash[filepath] = hex(index);
 
-		fs.readFile(filepath, function(err, code){
+
+		var ext = path.extname(filepath);
+		fs.readFile(filepath + (ext ? "" : ".js"), function(err, code){
 			if(err){
 				throw err;
 			}
@@ -69,19 +71,23 @@ module.exports = function(config, callback){
 						});
 					}
 					callback && callback(code);
-				})(template.replace(/\{\{(body|globalName)\}\}/g, function(all, key){
-					return {
-						body: codeList.map(function(code, index){
-							return "\n" + getTab(1) + "// " + code.path.replace(rootDir, "").replace(prefixSepReg, "") + "\n" + modTemplate.replace(/\{\{(body|modId)\}\}/g, function(all, key){
-								return {
-									modId: code.id,
-									body: code.content.split("\n").join("\n" + getTab(2))
-								}[key];
-							});
-						}).join("\n"),
-						globalName: modName
-					}[key];
-				}));
+				})((function(){
+					var data = {
+							body: codeList.reverse().map(function(code, index){
+								return "\n" + getTab(1) + "// " + code.path.replace(rootDir, "").replace(prefixSepReg, "") + "\n" + modTemplate.replace(/\{\{(body|modId)\}\}/g, function(all, key){
+									return {
+										modId: code.id,
+										body: code.content.split("\n").join("\n" + getTab(2))
+									}[key];
+								});
+							}).join("\n"),
+							globalName: modName
+						};
+
+					return template.replace(/\{\{(body|globalName)\}\}/g, function(all, key){
+						return data[key];
+					});
+				})());
 			}
 		});
 	}

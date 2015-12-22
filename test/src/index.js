@@ -1,4 +1,4 @@
-var a = require("./a.js");
-var c = require("./c.js");
+var a = require("./a");
+var c = require("./c");
 
 module.exports = "index";
