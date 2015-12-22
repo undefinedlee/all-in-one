@@ -6,8 +6,6 @@ var SLASH_RE = /\\\\/g
 
 module.exports = {
 	get: function(code, dir) {
-		var currentDir = dirname(currentPath);
-
 		var deps = [];
 
 		code.replace(SLASH_RE, "")
@@ -20,8 +18,6 @@ module.exports = {
 		return deps;
 	},
 	replace: function(code, dir, codeHash){
-		var currentDir = dirname(currentPath);
-
 		return code.replace(SLASH_RE, "____placeholder____")
 			.replace(REQUIRE_RE, function(m, m1, m2) {
 				if(m2){

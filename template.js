@@ -1,4 +1,6 @@
-;(function(){
+;(function(main){
+	window["{{globalName}}"] = main;
+})((function(){
 	var mods = {};
 	function require(id){
 		return mods[id];
@@ -8,8 +10,7 @@
 		factory(require, module.exports, module);
 		mods[id] = module.exports;
 	}
-
 	{{body}}
 
-	window["{{globalName}}"] = require("0");
-})();
+	return require("0");
+})());
