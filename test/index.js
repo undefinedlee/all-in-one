@@ -4,6 +4,6 @@ var allinone = require("../index");
 
 allinone({
 	name: "xxx",
-	main: path.join(fs.realpathSync("."), "src", "index.js"),
-	dist: path.join(fs.realpathSync("."), "dist", "index.js")
+	src: path.join(fs.realpathSync("."), "src", "index.js"),
+	dest: path.join(fs.realpathSync("."), "dist", "index.js")
 });

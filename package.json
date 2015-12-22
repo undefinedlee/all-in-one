@@ -1,6 +1,6 @@
 {
   "name": "all-in-one",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "package commonjs file all in one",
   "main": "index.js",
   "scripts": {

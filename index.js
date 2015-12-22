@@ -17,16 +17,16 @@ function getTab(count){
 		// 打包完释放到全局的变量名
 		name: "AllInOne",
 		// 入口文件
-		main: "/home/admin/xxx/index.js",
+		src: "/home/admin/xxx/index.js",
 		// 要写入的文件
-		dist: ""
+		dest: ""
 	}
  */
 module.exports = function(config, callback){
-	var mainfile = config.main || path.join(fs.realpathSync("."), "index.js");
-	var distfile = config.dist;
+	var src = config.src || path.join(fs.realpathSync("."), "index.js");
+	var dest = config.dest;
 	var modName = config.name || "AllInOne";
-	var rootDir = path.dirname(mainfile);
+	var rootDir = path.dirname(src);
 	var index = 0;
 	var waitCount = 0;
 	var codeList = [];
@@ -61,8 +61,8 @@ module.exports = function(config, callback){
 
 			if(-- waitCount === 0){
 				(function(code){
-					if(distfile){
-						fs.writeFile(distfile, code, function(err){
+					if(dest){
+						fs.writeFile(dest, code, function(err){
 							if(err){
 								throw err;
 							}
@@ -86,5 +86,5 @@ module.exports = function(config, callback){
 		});
 	}
 
-	read(mainfile);
+	read(src);
 };
