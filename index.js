@@ -21,9 +21,13 @@ module.exports = function(config, callback){
 	var dest = config.dest;
 	// 打包完释放到全局的变量名
 	var modName = config.name || "AllInOne";
+	// 读文件方法
+	var readFile = config.readFile || fs.readFile;
 	// 入口文件所在目录
 	var rootDir = path.dirname(src);
 
+	// 注入方法列表
+	var injectors = [];
 	// 模块列表
 	var modList = [];
 	// 模块序列号
@@ -57,9 +61,17 @@ module.exports = function(config, callback){
 
 		// 不带后缀的文件默认为js文件
 		var ext = path.extname(filepath);
-		fs.readFile(filepath + (ext ? "" : ".js"), function(err, code){
+		readFile(filepath + (ext ? "" : ".js"), function(err, code, _injectors){
 			if(err){
 				throw err;
+			}
+
+			if(_injectors){
+				_injectors.forEach(function(injector){
+					if(injectors.indexOf(injector) === -1){
+						injectors.push(injector);
+					}
+				});
 			}
 
 			code = code.toString("utf8");
@@ -96,10 +108,13 @@ module.exports = function(config, callback){
 						}[key];
 					});
 				}).join("\n"),
-				globalName: modName
+				globalName: modName,
+				injectors: injectors.map(function(injector){
+					return injector.split("\n").join("\n" + getTab(1));
+				}).join("\n")
 			};
 
-		var code = template.replace(/\{\{(body|globalName)\}\}/g, function(all, key){
+		var code = template.replace(/\{\{(body|globalName|injectors)\}\}/g, function(all, key){
 			return data[key];
 		});
 

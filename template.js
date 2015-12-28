@@ -10,6 +10,9 @@
 		factory(require, module.exports, module);
 		mods[id] = module.exports;
 	}
+
+	{{injectors}}
+	
 	{{body}}
 
 	return require("0");
