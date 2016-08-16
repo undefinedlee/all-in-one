@@ -1,0 +1,50 @@
+;define("all-in-one-test@1.0.7", function(__global_require__, exports, module){
+	function __require__(id){
+		var factory = mods[id];
+		var module;
+
+		if(!factory.isInitialized){
+			module = {exports: {}};
+			factory(__require__, module.exports, module);
+			factory.exports = module.exports;
+			factory.isInitialized = true;
+		}
+
+		return factory.exports;
+	}
+
+	__require__.async = __global_require__.async;
+
+	
+	
+	var mods = [
+		// index.js
+		function(require, exports, module){
+			var a = require(1);
+			var c = require(2);
+			
+			module.exports = "index";
+		},
+
+		// a
+		function(require, exports, module){
+			var b = require(3);
+			
+			module.exports = "a";
+		},
+
+		// c
+		function(require, exports, module){
+			var a = require(1);
+			var Enjoy = __global_require__("enjoy");
+			
+			module.exports = "c";
+		},
+
+		// b.js
+		function(require, exports, module){
+			module.exports = "b";
+		}];
+
+	module.exports = __require__(0);
+});

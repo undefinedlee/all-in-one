@@ -1,3 +1,3 @@
-	define("{{modId}}", function(require, exports, module){
-		{{body}}
-	});
+		function(require, exports, module){
+			{{body}}
+		}

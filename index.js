@@ -1,6 +1,5 @@
 var fs = require("fs");
 var path = require("path");
-var hex = require("./hex");
 var deps = require("./deps");
 var lazylist = require("./lazylist");
 var template = fs.readFileSync(path.join(__dirname, "template.js"), "utf8");
@@ -15,16 +14,30 @@ function getTab(count){
 }
 
 module.exports = function(config, callback){
+	var projectPath = config.src || fs.realpathSync(".");
+
+	packageJsonFile = path.join(projectPath, "package.json");
+	// 如果不存在package.json文件，返回
+	if(!fs.existsSync(packageJsonFile)){
+		console.error("");
+		return;
+	}
+	// 项目配置信息
+	var packageJson = JSON.parse(fs.readFileSync(packageJsonFile, {
+		encoding: "utf8"
+	}).replace(/\/\/.*[\n\r\t]/g, ""));
+
 	// 入口文件
-	var src = config.src || path.join(fs.realpathSync("."), "index.js");
-	// 打包后的文件
-	var dest = config.dest;
-	// 打包完释放到全局的变量名
-	var modName = config.name || "AllInOne";
+	var projectName = packageJson.name;
+	var main = path.join(projectPath, packageJson.main || "index.js");
+	var version = packageJson.version;
+
+	// 打包后的文件目录
+	var dist = config.dist;
 	// 读文件方法
 	var readFile = config.readFile || fs.readFile;
 	// 入口文件所在目录
-	var rootDir = path.dirname(src);
+	var rootDir = path.dirname(main);
 
 	// 注入方法列表
 	var injectors = [];
@@ -50,7 +63,7 @@ module.exports = function(config, callback){
 		}
 
 		// 生成模块序列ID
-		var modId = hex(modIndex ++);
+		var modId = modIndex ++;
 		modIdHash[filepath] = modId;
 
 		// 初始化模块状态
@@ -98,28 +111,31 @@ module.exports = function(config, callback){
 		});
 	}
 
-	read(src, function(){
+	read(main, function(){
 		var data = {
-				body: modList.map(function(code, index){
-					return "\n" + getTab(1) + "// " + code.path.replace(rootDir, "").replace(prefixSepReg, "") + "\n" + modTemplate.replace(/\{\{(body|modId)\}\}/g, function(all, key){
-						return {
-							modId: code.id,
-							body: code.content.split("\n").join("\n" + getTab(2))
-						}[key];
-					});
-				}).join("\n"),
-				globalName: modName,
+				body: modList
+						.sort(function(a, b){
+							return a.id - b.id;
+						})
+						.map(function(code, index){
+							return "\n" + getTab(2) + "// " + code.path.replace(rootDir, "").replace(prefixSepReg, "") + "\n" + modTemplate.replace(/\{\{(body)\}\}/g, function(all, key){
+								return {
+									body: code.content.split("\n").join("\n" + getTab(3))
+								}[key];
+							});
+						}).join(",\n"),
+				bundleId: projectName + "@" + version,
 				injectors: injectors.map(function(injector){
 					return injector.split("\n").join("\n" + getTab(1));
 				}).join("\n")
 			};
 
-		var code = template.replace(/\{\{(body|globalName|injectors)\}\}/g, function(all, key){
+		var code = template.replace(/\{\{(body|bundleId|injectors)\}\}/g, function(all, key){
 			return data[key];
 		});
 
-		if(dest){
-			fs.writeFile(dest, code, function(err){
+		if(dist){
+			fs.writeFile(path.join(dist, data.bundleId), code, function(err){
 				if(err){
 					throw err;
 				}

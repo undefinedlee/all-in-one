@@ -1,19 +1,23 @@
-;(function(main){
-	window["{{globalName}}"] = main;
-})((function(){
-	var mods = {};
-	function require(id){
-		return mods[id];
+;define("{{bundleId}}", function(__global_require__, exports, module){
+	function __require__(id){
+		var factory = mods[id];
+		var module;
+
+		if(!factory.isInitialized){
+			module = {exports: {}};
+			factory(__require__, module.exports, module);
+			factory.exports = module.exports;
+			factory.isInitialized = true;
+		}
+
+		return factory.exports;
 	}
-	function define(id, factory){
-		var module = {exports: {}};
-		factory(require, module.exports, module);
-		mods[id] = module.exports;
-	}
+
+	__require__.async = __global_require__.async;
 
 	{{injectors}}
 	
-	{{body}}
+	var mods = [{{body}}];
 
-	return require("0");
-})());
+	module.exports = __require__(0);
+});
