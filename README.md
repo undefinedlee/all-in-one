@@ -10,12 +10,10 @@ npm install all-in-one
 var allInOne = require("all-in-one");
 
 allInOne({
-    // 打包完之后释放到全局下的变量名[可选]
-    "name": "XXX",
-    // 入口文件
-    "src": "src/index.js",
-    // 打包后的文件[可选]
-    "dest": "dist/index.js"
+    // 入口目录[可选，如果没有设置则是当前命令所在目录]，读取入口目录下的package.json文件，获取打包入口文件、名称、版本等信息
+    "src": "src",
+    // 打包后的目录[可选]
+    "dist": "dist"
 }, function(code){ // 打包完之后的回调函数[可选]
     // 打包后的源代码
     console.log(code);
