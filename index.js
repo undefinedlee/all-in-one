@@ -31,6 +31,7 @@ module.exports = function(config, callback){
 	var projectName = packageJson.name;
 	var main = path.join(projectPath, packageJson.main || "index.js");
 	var version = packageJson.version;
+	var dependencies = packageJson.dependencies || {};
 
 	// 打包后的文件目录
 	var dist = config.dist;
@@ -101,7 +102,7 @@ module.exports = function(config, callback){
 				modList.push({
 					id: modId,
 					path: filepath,
-					content: deps.replace(code, dir, modIdHash)
+					content: deps.replace(code, dir, modIdHash, dependencies)
 				});
 				status.readyList.forEach(function(fn){
 					fn();

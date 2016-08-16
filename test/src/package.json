@@ -1,6 +1,9 @@
 {
   "name": "all-in-one-test",
-  "version": "1.0.7",
+  "version": "1.0.0",
   "description": "all in one test",
-  "main": "index.js"
+  "main": "index.js",
+  "dependencies": {
+    "enjoy": "^0.0.6"
+  }
 }

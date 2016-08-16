@@ -1,4 +1,4 @@
-;define("all-in-one-test@1.0.7", function(__global_require__, exports, module){
+;define("all-in-one-test@1.0.0", function(__global_require__, exports, module){
 	function __require__(id){
 		var factory = mods[id];
 		var module;
@@ -36,7 +36,7 @@
 		// c
 		function(require, exports, module){
 			var a = require(1);
-			var Enjoy = __global_require__("enjoy");
+			var Enjoy = __global_require__("enjoy@0.0.6");
 			
 			module.exports = "c";
 		},
